@@ -108,8 +108,11 @@ public class addNoteActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    ShareOnline();
-                    dialog.dismiss();
+
+                    if (mAuth != null) {
+                        ShareOnline();
+                        dialog.dismiss();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     Log.d(TAG, "onClick: " + e.getMessage());
@@ -130,43 +133,45 @@ public class addNoteActivity extends AppCompatActivity {
     public void SaveAndShare(){
 
 
+        if (mAuth != null) {
+            int id = NextID();
+            String Title = txtTitle.getText().toString();
+            String note = txtNote.getText().toString();
+            String userName = mAuth.getDisplayName();
+            String userProfilePic = String.valueOf(mAuth.getPhotoUrl());
 
-        int id = NextID();
-        String Title = txtTitle.getText().toString();
-        String note = txtNote.getText().toString();
-        String userName = mAuth.getDisplayName();
-        String userProfilePic = String.valueOf(mAuth.getPhotoUrl());
+            if (TextUtils.isEmpty(String.valueOf(id)) && TextUtils.isEmpty(Title) && TextUtils.isEmpty(note)) {
 
-        if (TextUtils.isEmpty(String.valueOf(id)) && TextUtils.isEmpty(Title) && TextUtils.isEmpty(note)){
+                Toasty.warning(this, "Check Empty Fields", Toast.LENGTH_LONG).show();
 
-            Toasty.warning(this,"Check Empty Fields", Toast.LENGTH_LONG).show();
+            } else {
+
+                try {
+                    final NoteList noteList = new NoteList();
+                    noteList.setId(id);
+                    noteList.setTitle(Title);
+                    noteList.setNote(note);
+
+                    realm.executeTransaction(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+
+                            realm.copyToRealmOrUpdate(noteList);
+
+                        }
+                    });
+
+                    startActivity(new Intent(this, MainActivity.class));
+                    finish();
+
+                } catch (Exception e) {
+                    Log.d(TAG, "SaveNote: " + e.getMessage());
+                }
+            }
 
         }else {
-
-            try {
-                final NoteList noteList = new NoteList();
-                noteList.setId(id);
-                noteList.setTitle(Title);
-                noteList.setNote(note);
-
-                realm.executeTransaction(new Realm.Transaction() {
-                    @Override
-                    public void execute(Realm realm) {
-
-                        realm.copyToRealmOrUpdate(noteList);
-
-                    }
-                });
-
-                startActivity(new Intent(this, MainActivity.class));
-                finish();
-
-            } catch (Exception e) {
-                Log.d(TAG, "SaveNote: " + e.getMessage());
-            }
+            Toasty.info(this,"Login First Please" , Toast.LENGTH_LONG).show();
         }
-
-
     }
 
 
@@ -210,35 +215,40 @@ public class addNoteActivity extends AppCompatActivity {
     } // Done
     public void ShareOnline(){
 
-        int id = NextID();
-        String postID = dbRef.push().getKey();
-        String title = txtTitle.getText().toString();
-        String note = txtNote.getText().toString();
-        String userName = mAuth.getDisplayName();
-        String userProfilePic = String.valueOf(mAuth.getPhotoUrl());
 
-        if (TextUtils.isEmpty(String.valueOf(id)) && TextUtils.isEmpty(title) && TextUtils.isEmpty(note)){
+        if (mAuth != null) {
+            int id = NextID();
+            String postID = dbRef.push().getKey();
+            String title = txtTitle.getText().toString();
+            String note = txtNote.getText().toString();
+            String userName = mAuth.getDisplayName();
+            String userProfilePic = String.valueOf(mAuth.getPhotoUrl());
 
-            Toasty.warning(this,"Check Empty Fields", Toast.LENGTH_LONG).show();
+            if (TextUtils.isEmpty(String.valueOf(id)) && TextUtils.isEmpty(title) && TextUtils.isEmpty(note)) {
 
-        }else {
-            try {
-                CommunityList communityList = new CommunityList();
+                Toasty.warning(this, "Check Empty Fields", Toast.LENGTH_LONG).show();
 
-                communityList.setUserName(userName);
-                communityList.setUserProfilePic(userProfilePic);
-                communityList.setTitle(title);
-                communityList.setNote(note);
-                dbRef.child(postID).setValue(communityList);
+            } else {
+                try {
+                    CommunityList communityList = new CommunityList();
 
-                startActivity(new Intent(this, MainActivity.class));
-                finish();
-            } catch (Exception e) {
-                e.printStackTrace();
+                    communityList.setUserName(userName);
+                    communityList.setUserProfilePic(userProfilePic);
+                    communityList.setTitle(title);
+                    communityList.setNote(note);
+                    dbRef.child(postID).setValue(communityList);
 
-                Log.d(TAG, "ShareOnline: " + e.getMessage());
-                Toasty.error(this,"Error Check Log",Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(this, MainActivity.class));
+                    finish();
+                } catch (Exception e) {
+                    e.printStackTrace();
+
+                    Log.d(TAG, "ShareOnline: " + e.getMessage());
+                    Toasty.error(this, "Error Check Log", Toast.LENGTH_LONG).show();
+                }
             }
+        }else {
+            Toasty.info(this,"Login First Please" , Toast.LENGTH_LONG).show();
         }
     } // Done
     public void getExtras(){

@@ -174,8 +174,6 @@ public class addNoteActivity extends AppCompatActivity {
         }
     }
 
-
-
     public void SaveNotesOffline(){
 
         int id = NextID();
@@ -198,8 +196,8 @@ public class addNoteActivity extends AppCompatActivity {
                     @Override
                     public void execute(Realm realm) {
 
+                        //this line to Save  the data Offline
                         realm.copyToRealmOrUpdate(noteList);
-
                     }
                 });
 

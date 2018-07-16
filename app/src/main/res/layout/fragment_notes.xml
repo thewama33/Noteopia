@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".FragmentsView.NotesFragment">
+
+   <android.support.constraint.ConstraintLayout
+       android:layout_width="match_parent"
+       android:layout_height="match_parent">
+
+
+       <TextView
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:id="@+id/backText"
+           android:gravity="center"
+           android:text="Empty"
+           android:textStyle="bold"
+           android:typeface="serif"/>
+       <android.support.v7.widget.RecyclerView
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:id="@+id/recyclerNotes"/>
+
+
+       <com.getbase.floatingactionbutton.FloatingActionsMenu
+           app:layout_constraintBottom_toBottomOf="parent"
+           app:layout_constraintEnd_toEndOf="parent"
+           app:layout_constraintHorizontal_bias="1.0"
+           app:fab_addButtonColorNormal="#3498db"
+           app:fab_addButtonColorPressed="#74b9ff"
+           app:fab_addButtonPlusIconColor="#ecf0f1"
+           app:layout_constraintStart_toEndOf="@dimen/_4sdp"
+           app:layout_constraintStart_toStartOf="parent"
+           android:layout_width="wrap_content"
+           app:fab_addButtonSize="normal"
+           android:layout_height="wrap_content">
+
+           <com.getbase.floatingactionbutton.FloatingActionButton
+               android:id="@+id/changeForm"
+               android:layout_width="86dp"
+               android:layout_height="68dp"
+               android:layout_gravity="bottom|end"
+               android:layout_marginBottom="16dp"
+               android:layout_marginEnd="8dp"
+               android:layout_marginStart="8dp"
+               app:fab_title="Change View"
+               app:fab_colorPressed="#EF5350"
+               app:fab_colorNormal="#E53935"
+               app:fab_icon="@drawable/ic_format_list_bulleted_black_24dp"
+               app:fabSize="mini"/>
+
+
+           <com.getbase.floatingactionbutton.FloatingActionButton
+               android:id="@+id/addNote"
+               android:layout_width="86dp"
+               android:layout_height="68dp"
+               android:layout_gravity="bottom|end"
+               android:layout_marginBottom="16dp"
+               android:layout_marginEnd="8dp"
+               android:layout_marginStart="8dp"
+               app:fab_title="Add Note"
+               app:fab_colorPressed="#EF5350"
+               app:fab_colorNormal="#E53935"
+               app:fab_icon="@drawable/ic_add_circle_outline_black_24dp"
+               app:fabSize="mini"/>
+
+           <com.getbase.floatingactionbutton.FloatingActionButton
+               android:id="@+id/deleteAll"
+               android:layout_width="86dp"
+               android:layout_height="68dp"
+               android:layout_gravity="bottom|end"
+               android:layout_marginBottom="16dp"
+               android:layout_marginEnd="8dp"
+               android:layout_marginStart="8dp"
+               app:fab_title="Add Note"
+               app:fab_colorPressed="#EF5350"
+               app:fab_colorNormal="#E53935"
+               app:fab_icon="@drawable/ic_people_black_24dp"
+               app:fabSize="mini"/>
+
+
+       </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+
+
+   </android.support.constraint.ConstraintLayout>
+
+</FrameLayout>

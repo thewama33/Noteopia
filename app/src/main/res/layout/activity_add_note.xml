@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ViewModels.addNoteActivity">
+
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_6sdp"
+        android:hint="Title">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textStyle="bold"
+            android:id="@+id/txtTitle"
+            android:padding="@dimen/_8sdp"
+            android:background="@android:color/transparent"
+            android:textSize="@dimen/_22sdp"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/_22sdp"
+            android:typeface="serif"
+            android:maxLength="3000"
+            android:background="@android:color/transparent"
+            android:padding="@dimen/_8sdp"
+            android:id="@+id/txtNote"
+            android:hint="Note"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:id="@+id/btnDone"
+        android:text="Done"/>
+
+</LinearLayout>

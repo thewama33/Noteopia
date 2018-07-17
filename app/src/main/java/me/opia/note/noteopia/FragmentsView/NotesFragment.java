@@ -4,18 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
-import es.dmoral.toasty.Toasty;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
@@ -27,7 +25,7 @@ import me.opia.note.noteopia.ViewModels.addNoteActivity;
 
 import static android.support.constraint.Constraints.TAG;
 
-public class NotesFragment extends Fragment {
+public class NotesFragment extends Fragment implements View.OnClickListener {
     public NotesFragment() {
         // Required empty public constructor
     }
@@ -58,7 +56,6 @@ public class NotesFragment extends Fragment {
         realm = Realm.getDefaultInstance();
         tinyDB = new TinyDB(getActivity());
         Binds(view);
-        handleClicks(view);
         parseData();
 
 
@@ -67,26 +64,66 @@ public class NotesFragment extends Fragment {
     }
 
 
-    public  void handleClicks(View v){
+    public void parseData(){
+
+        list = realm.where(NoteList.class).findAll().sort("id",Sort.DESCENDING);
+        list.size();
+
+        if (!list.isEmpty()) {
+            backText.setVisibility(View.GONE);
+
+          //  LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+
+            StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(3,StaggeredGridLayoutManager.VERTICAL);
+
+            rcNotes.setLayoutManager(staggeredGridLayoutManager);
+            rcNotes.setHasFixedSize(true);
+            rcNotes.smoothScrollToPosition(0);
+            rcNotes.setItemAnimator(new DefaultItemAnimator());
+
+            adapter = new NoteAdapter(getActivity(), list);
+            rcNotes.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        }
+    }
+    public void Binds(View view){
+        btnAddNote = view.findViewById(R.id.addNote);
+        btnAddNote.setOnClickListener(this);
+        btnChangeView = view.findViewById(R.id.changeForm);
+        btnChangeView.setOnClickListener(this);
+        del = view.findViewById(R.id.deleteAll);
+        del.setOnClickListener(this);
+
+        rcNotes = view.findViewById(R.id.recyclerNotes);
+        backText = view.findViewById(R.id.backText);
+
+    }
 
 
-        btnAddNote.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+
+            case R.id.addNote:
+
                 startActivity(new Intent(getContext(),addNoteActivity.class));
 
-            }
-        });
-        btnChangeView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toasty.info(getActivity(),"Change RecyclerView formation", Toast.LENGTH_LONG).show();
-            }
-        });
+            break;
 
-        del.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.changeForm:
+//                String rcView = tinyDB.getString("rcView");
+//
+//
+//                if (rcView == "LinearLayoutManager") {
+//
+//                    rcNotes.setLayoutManager(linearLayoutManager);
+//                } else if (rcView == "staggeredGridLayoutManager"){
+//
+//                    rcNotes.setLayoutManager(staggeredGridLayoutManager);
+//                }
+                break;
+
+            case R.id.deleteAll:
                 try {
                     realm.beginTransaction();
                     realm.deleteAll();
@@ -99,37 +136,9 @@ public class NotesFragment extends Fragment {
                     e.printStackTrace();
                     Log.d(TAG, "deleteRealmData: " + e.getMessage());
                 }
-            }
-        });
-    }
+                break;
 
-    public void parseData(){
 
-        list = realm.where(NoteList.class).findAll().sort("id",Sort.DESCENDING);
-        list.size();
-
-        if (!list.isEmpty()) {
-            backText.setVisibility(View.GONE);
-
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-            rcNotes.setLayoutManager(linearLayoutManager);
-            rcNotes.setHasFixedSize(true);
-            rcNotes.smoothScrollToPosition(0);
-            rcNotes.setItemAnimator(new DefaultItemAnimator());
-
-            adapter = new NoteAdapter(getActivity(), list);
-            rcNotes.setAdapter(adapter);
-            adapter.notifyDataSetChanged();
         }
     }
-    public void Binds(View view){
-        btnAddNote = view.findViewById(R.id.addNote);
-        btnChangeView = view.findViewById(R.id.changeForm);
-        del = view.findViewById(R.id.deleteAll);
-        rcNotes = view.findViewById(R.id.recyclerNotes);
-        backText = view.findViewById(R.id.backText);
-
-    }
-
-
 }

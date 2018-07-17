@@ -6,6 +6,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
+
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -20,7 +23,6 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.viewPager) ViewPager viewPager;
     @BindView(R.id.navigation) NavigationTabBar navigationTabBar;
-
 
 
     @Override
@@ -40,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
                         getResources().getDrawable(R.drawable.ic_people_black_24dp),
                         Color.parseColor("#76afcf")
                 ).title("Community")
-                        .badgeTitle("state")
+                        .badgeTitle("icon")
                         .build()
         );
 
@@ -49,14 +51,14 @@ public class MainActivity extends AppCompatActivity {
                         getResources().getDrawable(R.drawable.ic_description_black_24dp),
                         Color.parseColor("#f9bb72")
                 ).title("Notes")
-                        .badgeTitle("with")
+                        .badgeTitle("777")
                         .build()
         );
 
 
 
         navigationTabBar.setModels(models);
-        navigationTabBar.setViewPager(viewPager, 3);
+        navigationTabBar.setViewPager(viewPager, 2);
         navigationTabBar.setBehaviorEnabled(true);
         navigationTabBar.setIsBadgeUseTypeface(true);
 
@@ -95,10 +97,14 @@ public class MainActivity extends AppCompatActivity {
             switch (position){
                 case 1:
                     NotesFragment notesFragment = new NotesFragment();
+                    Toast.makeText(MainActivity.this, "Database Offline", Toast.LENGTH_SHORT).show();
+                    FirebaseDatabase.getInstance().goOffline();
                     return notesFragment;
 
                 case 0:
                     CommunityFragment communityFragment = new CommunityFragment();
+                    Toast.makeText(MainActivity.this, "Database Online", Toast.LENGTH_SHORT).show();
+                    FirebaseDatabase.getInstance().goOnline();
                     return communityFragment;
             }
             return null;

@@ -126,29 +126,6 @@ public class CommunityFragment extends Fragment {
 });
         return view;
     }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            try {
-                // Google Sign In was successful, authenticate with Firebase
-                GoogleSignInAccount account = task.getResult(ApiException.class);
-                firebaseAuthWithGoogle(account);
-            } catch (ApiException e) {
-                // Google Sign In failed, update UI appropriately
-                Log.w(TAG, "Google sign in failed", e);
-                // [START_EXCLUDE]
-                updateUI(null);
-                // [END_EXCLUDE]
-            }
-        }
-
-    }
-
     public void parseData() {
         lists = realm.where(CommunityList.class).findAllAsync().sort("id", Sort.DESCENDING);
         lists.size();
@@ -163,29 +140,32 @@ public class CommunityFragment extends Fragment {
             rcCommunity.setHasFixedSize(true);
 
             dbref = FirebaseDatabase.getInstance().getReference("CommunityNotes");
-
+            dbref.keepSynced(true);
             try {
                 dbref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot dt : dataSnapshot.getChildren()) {
 
-                            if (!dt.hasChildren()) {
+                            if (!dataSnapshot.hasChildren()) {
 
-                                txtBack.setVisibility(View.VISIBLE);
+                                    Log.d(TAG, "onCheckTheData: " + dataSnapshot.getChildren());
+                                    txtBack.setVisibility(View.VISIBLE);
                             } else {
+
                                 txtBack.setVisibility(View.GONE);
 
                                 final CommunityList communityModel = dt.getValue(CommunityList.class);
 
-                                realm.executeTransaction(new Realm.Transaction() {
-                                    @Override
-                                    public void execute(Realm realm) {
+                                communityModel.setId(NextID());
 
-                                        communityModel.setId(NextID());
-                                        realm.copyToRealmOrUpdate(communityModel);
-                                    }
-                                });
+                                communityModel.setId(NextID());
+
+                                realm.beginTransaction();
+                                realm.copyToRealmOrUpdate(communityModel);
+                                realm.commitTransaction();
+
+                                Log.d(TAG, "onDataChange: " + communityModel);
                             }
                         }
                     }
@@ -209,6 +189,29 @@ public class CommunityFragment extends Fragment {
         rcCommunity.setAdapter(adapter);
 
     }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                // Google Sign In was successful, authenticate with Firebase
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                firebaseAuthWithGoogle(account);
+            } catch (ApiException e) {
+                // Google Sign In failed, update UI appropriately
+                Log.w(TAG, "Google sign in failed", e);
+                // [START_EXCLUDE]
+                updateUI(null);
+                // [END_EXCLUDE]
+            }
+        }
+
+    }
+
+
 
     public int NextID() {
         try {

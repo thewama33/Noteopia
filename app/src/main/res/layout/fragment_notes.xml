@@ -47,10 +47,10 @@
                android:layout_marginEnd="8dp"
                android:layout_marginStart="8dp"
                app:fab_title="Change View"
-               app:fab_colorPressed="#EF5350"
-               app:fab_colorNormal="#E53935"
+               app:fab_colorPressed="#ffeaa7"
+               app:fab_colorNormal="#fdcb6e"
                app:fab_icon="@drawable/ic_format_list_bulleted_black_24dp"
-               app:fabSize="mini"/>
+               app:fabSize="normal"/>
 
 
            <com.getbase.floatingactionbutton.FloatingActionButton
@@ -62,8 +62,8 @@
                android:layout_marginEnd="8dp"
                android:layout_marginStart="8dp"
                app:fab_title="Add Note"
-               app:fab_colorPressed="#EF5350"
-               app:fab_colorNormal="#E53935"
+               app:fab_colorPressed="#34495e"
+               app:fab_colorNormal="#2c3e50"
                app:fab_icon="@drawable/ic_add_circle_outline_black_24dp"
                app:fabSize="mini"/>
 
@@ -76,8 +76,8 @@
                android:layout_marginEnd="8dp"
                android:layout_marginStart="8dp"
                app:fab_title="Add Note"
-               app:fab_colorPressed="#EF5350"
-               app:fab_colorNormal="#E53935"
+               app:fab_colorPressed="#55efc4"
+               app:fab_colorNormal="#00b894"
                app:fab_icon="@drawable/ic_people_black_24dp"
                app:fabSize="mini"/>
 

@@ -44,7 +44,7 @@ public class addNoteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_note);
         ButterKnife.bind(this);
         realm = Realm.getDefaultInstance();
-        getExtras();
+//        getExtras();
         mAuth = FirebaseAuth.getInstance().getCurrentUser();
         dbRef = FirebaseDatabase.getInstance().getReference("CommunityNotes");
         dialog = new Dialog(this);
